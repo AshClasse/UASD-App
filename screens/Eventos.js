@@ -84,7 +84,6 @@ const Eventos = () => {
           renderItem={({ item }) => (
             <View style={styles.eventItem}>
               <Text style={styles.eventTitle}>{item.titulo}</Text>
-              {/* Muestra un resumen del evento */}
               <Text style={styles.eventSummary}>
                 {item.descripcion
                   ? item.descripcion.slice(0, 100) + "..."
@@ -100,7 +99,6 @@ const Eventos = () => {
         />
       )}
 
-      {/* Modal para mostrar detalles del evento */}
       <Modal
         visible={isModalVisible}
         animationType="slide"
