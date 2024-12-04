@@ -13,17 +13,19 @@ import Deuda from "./screens/Deuda";
 import Eventos from "./screens/Eventos";  
 import Videos from "./screens/Videos";
 import AcercaDe from "./screens/AcercaDe";
+import LandingScreen from "./screens/LandingScreen";
 const Drawer = createDrawerNavigator();
 
 
 const Navigation = () => {
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Iniciar Sesión">
+      <Drawer.Navigator initialRouteName="LandingScreen">
+        <Drawer.Screen name="LandingScreen" component={LandingScreen} />
         <Drawer.Screen name="Iniciar Sesión" component={Login} />
         <Drawer.Screen name="Noticias" component={Noticias} />
         <Drawer.Screen name="Eventos" component={Eventos} />
-        <Drawer.Screen name="Videos" component={Videos} /> 
+        <Drawer.Screen name="Videos" component={Videos} />
         <Drawer.Screen name="Tareas" component={Tareas} />
         <Drawer.Screen name="Materias" component={Materias} />
         <Drawer.Screen name="Horarios" component={Horarios} />
