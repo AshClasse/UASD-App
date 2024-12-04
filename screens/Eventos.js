@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, Button, Alert } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Button,
+  Modal,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -7,6 +16,8 @@ const Eventos = () => {
   const [eventos, setEventos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   const getAuthToken = async () => {
     const token = await AsyncStorage.getItem("authToken");
@@ -19,7 +30,7 @@ const Eventos = () => {
 
     try {
       const token = await getAuthToken();
-      
+
       if (!token) {
         setError("No token found, please login again.");
         setLoading(false);
@@ -28,10 +39,10 @@ const Eventos = () => {
 
       const response = await axios.get("https://uasdapi.ia3x.com/eventos", {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
-      
+
       if (response.data && response.data.length > 0) {
         setEventos(response.data);
       } else {
@@ -48,24 +59,22 @@ const Eventos = () => {
     fetchEventos();
   }, []);
 
-  const renderEventDetails = (item) => {
-    return (
-      <View style={styles.eventDetails}>
-        <Text style={styles.eventTitle}>{item.titulo}</Text>
-        <Text style={styles.eventText}>Descripción: {item.descripcion}</Text>
-        <Text style={styles.eventText}>Fecha: {new Date(item.fechaEvento).toLocaleString()}</Text>
-        <Text style={styles.eventText}>Lugar: {item.lugar}</Text>
-        <Text style={styles.eventText}>Coordenadas: {item.coordenadas}</Text>
-      </View>
-    );
+  const showEventDetails = (event) => {
+    setSelectedEvent(event);
+    setIsModalVisible(true);
+  };
+
+  const hideModal = () => {
+    setIsModalVisible(false);
+    setSelectedEvent(null);
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Eventos de la UASD</Text>
-      
+
       {loading ? (
-        <Text>Loading...</Text>
+        <ActivityIndicator size="large" color="#007bff" />
       ) : error ? (
         <Text style={styles.error}>{error}</Text>
       ) : (
@@ -77,12 +86,46 @@ const Eventos = () => {
               <Text style={styles.eventTitle}>{item.titulo}</Text>
               <Button
                 title="Ver detalles"
-                onPress={() => Alert.alert("Detalles del Evento", renderEventDetails(item))}
+                color="#007bff"
+                onPress={() => showEventDetails(item)}
               />
             </View>
           )}
         />
       )}
+
+      {/* Modal para mostrar detalles del evento */}
+      <Modal
+        visible={isModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={hideModal}
+      >
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContainer}>
+            {selectedEvent && (
+              <>
+                <Text style={styles.modalTitle}>{selectedEvent.titulo}</Text>
+                <Text style={styles.modalText}>
+                  Descripción: {selectedEvent.descripcion}
+                </Text>
+                <Text style={styles.modalText}>
+                  Fecha: {new Date(selectedEvent.fechaEvento).toLocaleString()}
+                </Text>
+                <Text style={styles.modalText}>
+                  Lugar: {selectedEvent.lugar}
+                </Text>
+                <Text style={styles.modalText}>
+                  Coordenadas: {selectedEvent.coordenadas}
+                </Text>
+              </>
+            )}
+            <TouchableOpacity style={styles.closeButton} onPress={hideModal}>
+              <Text style={styles.closeButtonText}>Cerrar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -90,34 +133,70 @@ const Eventos = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    backgroundColor: "#f8f9fa",
     padding: 20,
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
+    fontWeight: "bold",
+    color: "#343a40",
     textAlign: "center",
     marginBottom: 20,
   },
   eventItem: {
+    backgroundColor: "#ffffff",
+    borderRadius: 10,
     marginBottom: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-    paddingBottom: 10,
+    padding: 15,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 3,
   },
   eventTitle: {
     fontSize: 18,
     fontWeight: "bold",
-  },
-  eventText: {
-    fontSize: 14,
-    marginTop: 5,
-  },
-  eventDetails: {
-    padding: 10,
+    color: "#007bff",
   },
   error: {
-    color: "red",
+    color: "#dc3545",
     textAlign: "center",
+    fontSize: 18,
+  },
+  modalBackground: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContainer: {
+    backgroundColor: "#ffffff",
+    padding: 20,
+    borderRadius: 10,
+    width: "80%",
+    alignItems: "center",
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#007bff",
+    marginBottom: 10,
+  },
+  modalText: {
+    fontSize: 16,
+    color: "#495057",
+    marginVertical: 5,
+  },
+  closeButton: {
+    marginTop: 20,
+    paddingVertical: 10,
+    backgroundColor: "#007bff",
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: "#ffffff",
+    fontSize: 16,
   },
 });
 
