@@ -84,6 +84,12 @@ const Eventos = () => {
           renderItem={({ item }) => (
             <View style={styles.eventItem}>
               <Text style={styles.eventTitle}>{item.titulo}</Text>
+              {/* Muestra un resumen del evento */}
+              <Text style={styles.eventSummary}>
+                {item.descripcion
+                  ? item.descripcion.slice(0, 100) + "..."
+                  : "No description available."}
+              </Text>
               <Button
                 title="Ver detalles"
                 color="#007bff"
@@ -158,6 +164,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "#007bff",
+  },
+  eventSummary: {
+    fontSize: 14,
+    color: "#495057",
+    marginVertical: 5,
   },
   error: {
     color: "#dc3545",
