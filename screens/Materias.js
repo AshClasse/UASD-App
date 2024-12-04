@@ -14,23 +14,24 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 
 const MateriasScreen = ({ navigation }) => {
-  const [materias, setMaterias] = useState([]); // Materias disponibles
-  const [preseleccionadas, setPreseleccionadas] = useState([]); // Preseleccionadas
+  const [materias, setMaterias] = useState([]); 
+  const [preseleccionadas, setPreseleccionadas] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [selectedMateria, setSelectedMateria] = useState(null); // Materia seleccionada para el modal
-  const [modalVisible, setModalVisible] = useState(false); // Control del modal
+  const [selectedMateria, setSelectedMateria] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
-  // Verificar token cada vez que la pantalla obtiene el foco
   useFocusEffect(
     React.useCallback(() => {
       const checkAuthToken = async () => {
         const authToken = await AsyncStorage.getItem("authToken");
         if (!authToken) {
-          // Si no hay token, redirigir al login
+
           Alert.alert("Error", "Debes iniciar sesión primero.");
-          navigation.navigate("Login");
+          navigation.navigate("Iniciar Sesión");
+        navigation.navigate("Iniciar Sesión");
+      navigation.navigate("Iniciar Sesión");
         } else {
-          // Si hay token, proceder a cargar las materias y preselecciones
+
           fetchMateriasDisponibles();
           fetchPreseleccionadas();
         }
@@ -39,7 +40,6 @@ const MateriasScreen = ({ navigation }) => {
     }, [])
   );
 
-  // Función para cargar las materias disponibles
   const fetchMateriasDisponibles = async () => {
     setLoading(true);
     try {
@@ -61,7 +61,6 @@ const MateriasScreen = ({ navigation }) => {
     }
   };
 
-  // Función para cargar las preseleccionadas
   const fetchPreseleccionadas = async () => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
@@ -80,7 +79,6 @@ const MateriasScreen = ({ navigation }) => {
     }
   };
 
-  // Función para preseleccionar una materia
   const preseleccionarMateria = async (codigo) => {
     setLoading(true);
     try {
@@ -97,8 +95,8 @@ const MateriasScreen = ({ navigation }) => {
       );
       if (response.data.success) {
         Alert.alert("Éxito", "Materia preseleccionada.");
-        fetchPreseleccionadas(); // Refrescar las preselecciones
-        setModalVisible(false); // Cerrar el modal
+        fetchPreseleccionadas();
+        setModalVisible(false);
       }
     } catch (error) {
       Alert.alert("Error", "No se pudo preseleccionar la materia.");
@@ -107,7 +105,6 @@ const MateriasScreen = ({ navigation }) => {
     }
   };
 
-  // Función para cancelar la preselección de una materia
   const cancelarPreseleccion = async (codigo) => {
     setLoading(true);
     try {
@@ -124,7 +121,7 @@ const MateriasScreen = ({ navigation }) => {
       );
       if (response.data.success) {
         Alert.alert("Éxito", "Materia cancelada.");
-        fetchPreseleccionadas(); // Refrescar las preselecciones
+        fetchPreseleccionadas(); 
       }
     } catch (error) {
       Alert.alert("Error", "No se pudo cancelar la preselección.");
@@ -133,13 +130,11 @@ const MateriasScreen = ({ navigation }) => {
     }
   };
 
-  // Función para abrir el modal de preselección
   const openModal = (materia) => {
     setSelectedMateria(materia);
     setModalVisible(true);
   };
 
-  // Función para cerrar el modal
   const closeModal = () => {
     setSelectedMateria(null);
     setModalVisible(false);
@@ -195,7 +190,6 @@ const MateriasScreen = ({ navigation }) => {
         />
       )}
 
-      {/* Modal para preseleccionar materia */}
       <Modal
         visible={modalVisible}
         animationType="fade"
@@ -224,7 +218,6 @@ const MateriasScreen = ({ navigation }) => {
   );
 };
 
-// Estilos dentro del mismo archivo
 const styles = StyleSheet.create({
   container: {
     flex: 1,

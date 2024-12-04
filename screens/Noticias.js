@@ -20,10 +20,11 @@ const Noticias = ({ navigation }) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
 
-      // Si el token no está disponible, redirige a la pantalla de login
       if (!authToken) {
         Alert.alert("Error", "Debes iniciar sesión primero.");
-        navigation.navigate("Login");
+        navigation.navigate("Iniciar Sesión");
+        navigation.navigate("Iniciar Sesión");
+      navigation.navigate("Iniciar Sesión");
         return;
       }
 

@@ -1,67 +1,70 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Linking } from "react-native";
 
 const Login = ({ navigation }) => {
-  const [username, setUsername] = useState(""); // Estado para el nombre de usuario
-  const [password, setPassword] = useState(""); // Estado para la contraseña
-  const [error, setError] = useState(""); // Estado para el mensaje de error
-  const [loading, setLoading] = useState(false); // Estado para el indicador de carga
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
-    setLoading(true); // Inicia el indicador de carga
-    setError(""); // Resetea el mensaje de error
+    setLoading(true);
+    setError("");
     try {
       const response = await axios.post("https://uasdapi.ia3x.com/login", {
         username,
         password,
-      }); // Realiza la solicitud POST al endpoint de login
+      });
       if (response.data.success) {
-        await AsyncStorage.setItem("authToken", response.data.data.authToken); // Almacena el authToken en AsyncStorage
-        Alert.alert("Login successful"); // Muestra una alerta de éxito
-        navigation.navigate("Profile"); // Navega a la pantalla de inicio
+        await AsyncStorage.setItem("authToken", response.data.data.authToken);
+        Alert.alert("Inicio de Sesión Exitoso");
+        navigation.navigate("Mi Perfil");
       } else {
-        setError(response.data.message); // Establece el mensaje de error desde la respuesta
+        setError(response.data.message);
       }
     } catch (err) {
-      setError("Login failed"); // Establece un mensaje de error genérico
+      setError("Inicio de Sesión Fallido");
     } finally {
-      setLoading(false); // Detiene el indicador de carga
+      setLoading(false);
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Iniciar Sesión</Text>
       <View style={styles.formGroup}>
-        <Text>Username:</Text>
+        <Text>Usuario:</Text>
         <TextInput
           style={styles.input}
           value={username}
           onChangeText={setUsername}
           autoCapitalize="none"
-        />{" "}
-        {/* Campo de entrada para el nombre de usuario */}
+        />
       </View>
       <View style={styles.formGroup}>
-        <Text>Password:</Text>
+        <Text>Contraseña:</Text>
         <TextInput
           style={styles.input}
           value={password}
           onChangeText={setPassword}
           secureTextEntry
-        />{" "}
-        {/* Campo de entrada para la contraseña */}
+        />
       </View>
       <Button
-        title={loading ? "Logging in..." : "Login"}
+        title={loading ? "Iniciando Sesión..." : "Iniciar Sesión"}
         onPress={handleLogin}
         disabled={loading}
-      />{" "}
-      {/* Botón de inicio de sesión */}
-      {error ? <Text style={styles.error}>{error}</Text> : null}{" "}
-      {/* Muestra el mensaje de error si existe */}
+      />
+      {error ? <Text style={styles.error}>{error}</Text> : null}
+      <TouchableOpacity onPress={() => navigation.navigate("Olvidé mi Contraseña")}>
+        <Text style={styles.link}>Olvidaste tu contraseña?</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => Linking.openURL("https://uasd.edu.do/")}>
+        <Text style={styles.link}>Estudia con Nosotros</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -90,6 +93,12 @@ const styles = StyleSheet.create({
     color: "red",
     marginTop: 10,
     textAlign: "center",
+  },
+  link: {
+    color: "blue",
+    marginTop: 10,
+    textAlign: "center",
+    textDecorationLine: "underline",
   },
 });
 

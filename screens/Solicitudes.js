@@ -27,14 +27,15 @@ const SolicitudesScreen = () => {
     { codigo: "record_nota", descripcion: "Record de nota" },
   ];
 
-  // Obtener las solicitudes creadas por el usuario
   const fetchSolicitudes = async () => {
     try {
       setIsLoading(true);
       const authToken = await AsyncStorage.getItem("authToken");
       if (!authToken) {
         Alert.alert("Error", "Debes iniciar sesión primero.");
-        navigation.navigate("Login");
+        navigation.navigate("Iniciar Sesión");
+        navigation.navigate("Iniciar Sesión");
+      navigation.navigate("Iniciar Sesión");
         return;
       }
 
@@ -58,20 +59,21 @@ const SolicitudesScreen = () => {
     }
   };
 
-  // Función para cancelar una solicitud
   const handleCancel = async (id) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
       if (!authToken) {
-        navigation.navigate("Login");
+        navigation.navigate("Iniciar Sesión");
+        navigation.navigate("Iniciar Sesión");
+      navigation.navigate("Iniciar Sesión");
         return;
       }
 
-      setIsLoading(true); // Muestra el indicador de carga mientras se procesa
+      setIsLoading(true); 
 
       const response = await axios.post(
-        "https://uasdapi.ia3x.com/cancelar_solicitud", // URL de cancelación
-        id, // Aquí enviamos solo el id, sin envolverlo en un objeto
+        "https://uasdapi.ia3x.com/cancelar_solicitud", 
+        id, 
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -82,7 +84,7 @@ const SolicitudesScreen = () => {
 
       if (response.data.success) {
         Alert.alert("Éxito", "Solicitud cancelada exitosamente.");
-        fetchSolicitudes(); // Refrescar la lista después de cancelar
+        fetchSolicitudes();
       } else {
         Alert.alert("Error", "No se pudo cancelar la solicitud.");
       }
@@ -93,7 +95,7 @@ const SolicitudesScreen = () => {
       );
       Alert.alert("Error", "Ocurrió un error al cancelar la solicitud.");
     } finally {
-      setIsLoading(false); // Esconde el indicador de carga después de finalizar
+      setIsLoading(false); 
     }
   };
 
@@ -111,7 +113,9 @@ const SolicitudesScreen = () => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
       if (!authToken) {
-        navigation.navigate("Login");
+        navigation.navigate("Iniciar Sesión");
+        navigation.navigate("Iniciar Sesión");
+      navigation.navigate("Iniciar Sesión");
         return;
       }
 
@@ -123,14 +127,14 @@ const SolicitudesScreen = () => {
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
-            "Content-Type": "application/json", // Asegúrate de que el encabezado Content-Type está configurado
+            "Content-Type": "application/json", 
           },
         }
       );
 
       if (response.data.success) {
         Alert.alert("Éxito", "Solicitud creada correctamente.");
-        fetchSolicitudes(); // Refrescar la lista después de crear una solicitud
+        fetchSolicitudes();
       } else {
         Alert.alert("Error", "No se pudo crear la solicitud.");
       }
@@ -144,7 +148,7 @@ const SolicitudesScreen = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      fetchSolicitudes(); // Llamar a la función cuando la pantalla es enfocada
+      fetchSolicitudes();
     }, [])
   );
 
@@ -152,7 +156,6 @@ const SolicitudesScreen = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Crear Solicitud</Text>
 
-      {/* Dropdown para seleccionar el tipo de solicitud */}
       <TouchableOpacity
         onPress={() => setModalVisible(true)}
         style={styles.dropdown}
@@ -177,7 +180,6 @@ const SolicitudesScreen = () => {
         </Text>
       </TouchableOpacity>
 
-      {/* Modal para seleccionar tipo de solicitud */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -208,7 +210,6 @@ const SolicitudesScreen = () => {
         </View>
       </Modal>
 
-      {/* Lista de solicitudes creadas */}
       <Text style={styles.title}>Mis Solicitudes</Text>
       <FlatList
         data={solicitudes}

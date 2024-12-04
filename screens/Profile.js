@@ -45,7 +45,8 @@ const Profile = ({ navigation }) => {
         }
       } else {
         Alert.alert("Error", "Debes iniciar sesión primero.");
-        navigation.navigate("Login");
+        navigation.navigate("Iniciar Sesión");
+        navigation.navigate("Iniciar Sesión");
       }
     } catch (error) {
       Alert.alert("Error", "Failed to load user data");
@@ -57,7 +58,7 @@ const Profile = ({ navigation }) => {
   const handleLogout = async () => {
     try {
       await AsyncStorage.clear();
-      navigation.navigate("Login");
+      navigation.navigate("Iniciar Sesión");
     } catch (error) {
       Alert.alert("Error", "Failed to log out");
     }
@@ -81,13 +82,13 @@ const Profile = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        <Text style={styles.header}>Profile</Text>
+        <Text style={styles.header}>Mi Perfil</Text>
         <View style={styles.infoRow}>
-          <Text style={styles.label}>Username:</Text>
+          <Text style={styles.label}>Usuario:</Text>
           <Text style={styles.value}>{username}</Text>
         </View>
         <View style={styles.infoRow}>
-          <Text style={styles.label}>Full Name:</Text>
+          <Text style={styles.label}>Nombre:</Text>
           <Text style={styles.value}>{fullName}</Text>
         </View>
         <View style={styles.infoRow}>
@@ -96,7 +97,7 @@ const Profile = ({ navigation }) => {
         </View>
       </View>
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-        <Text style={styles.logoutText}>Logout</Text>
+        <Text style={styles.logoutText}>Cerrar Sesión</Text>
       </TouchableOpacity>
     </View>
   );

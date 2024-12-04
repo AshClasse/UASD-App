@@ -15,7 +15,6 @@ const Tareas = ({ navigation }) => {
   const [tareas, setTareas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Verificación del token y carga de tareas al obtener el foco
   useFocusEffect(
     React.useCallback(() => {
       const fetchTareas = async () => {
@@ -24,7 +23,8 @@ const Tareas = ({ navigation }) => {
 
           if (!authToken) {
             Alert.alert("Error", "Debes iniciar sesión primero.");
-            navigation.navigate("Login"); // Redirige a Login si no hay token
+            navigation.navigate("Iniciar Sesión");
+navigation.navigate("Iniciar Sesión");
             return;
           }
 
@@ -47,7 +47,7 @@ const Tareas = ({ navigation }) => {
       };
 
       fetchTareas();
-    }, [navigation]) // Agregar navigation como dependencia para asegurar que se redirige correctamente
+    }, [navigation])
   );
 
   const renderItem = ({ item }) => (
