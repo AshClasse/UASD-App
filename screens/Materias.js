@@ -8,6 +8,7 @@ import {
   Modal,
   Alert,
   StyleSheet,
+  TouchableOpacity
 } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -15,7 +16,7 @@ import { useFocusEffect } from "@react-navigation/native";
 
 const MateriasScreen = ({ navigation }) => {
   const [materias, setMaterias] = useState([]); 
-  const [preseleccionadas, setPreseleccionadas] = useState([]);
+  const [preseleccionadas, setPreseleccionadas] = useState([]); 
   const [loading, setLoading] = useState(false);
   const [selectedMateria, setSelectedMateria] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -25,13 +26,9 @@ const MateriasScreen = ({ navigation }) => {
       const checkAuthToken = async () => {
         const authToken = await AsyncStorage.getItem("authToken");
         if (!authToken) {
-
           Alert.alert("Error", "Debes iniciar sesión primero.");
           navigation.navigate("Iniciar Sesión");
-        navigation.navigate("Iniciar Sesión");
-      navigation.navigate("Iniciar Sesión");
         } else {
-
           fetchMateriasDisponibles();
           fetchPreseleccionadas();
         }
@@ -54,7 +51,6 @@ const MateriasScreen = ({ navigation }) => {
       );
       setMaterias(response.data || []);
     } catch (error) {
-      console.error("Error al obtener las materias disponibles:", error);
       Alert.alert("Error", "No se pudo cargar las materias disponibles.");
     } finally {
       setLoading(false);
@@ -74,7 +70,6 @@ const MateriasScreen = ({ navigation }) => {
       );
       setPreseleccionadas(response.data.data || []);
     } catch (error) {
-      console.error("Error al obtener las preselecciones:", error);
       Alert.alert("Error", "No se pudo cargar las preselecciones.");
     }
   };
@@ -121,7 +116,7 @@ const MateriasScreen = ({ navigation }) => {
       );
       if (response.data.success) {
         Alert.alert("Éxito", "Materia cancelada.");
-        fetchPreseleccionadas(); 
+        fetchPreseleccionadas();
       }
     } catch (error) {
       Alert.alert("Error", "No se pudo cancelar la preselección.");
@@ -147,21 +142,22 @@ const MateriasScreen = ({ navigation }) => {
       {loading ? (
         <ActivityIndicator size="large" />
       ) : materias.length === 0 ? (
-        <Text>No hay materias disponibles.</Text>
+        <Text style={styles.text}>No hay materias disponibles.</Text>
       ) : (
         <FlatList
           data={materias}
           keyExtractor={(item) => item.codigo}
           renderItem={({ item }) => (
             <View style={styles.materiaItem}>
-              <Text>{item.nombre}</Text>
-              <Text>{item.horario}</Text>
-              <Text>{item.aula}</Text>
-              <Button
-                style={styles.button}
-                title="Preseleccionar"
+              <Text style={styles.materiaName}>{item.nombre}</Text>
+              <Text style={styles.materiaDetails}>{item.horario}</Text>
+              <Text style={styles.materiaDetails}>{item.aula}</Text>
+              <TouchableOpacity 
+                style={styles.button} 
                 onPress={() => openModal(item)}
-              />
+              >
+                <Text style={styles.buttonText}>Preseleccionar</Text>
+              </TouchableOpacity>
             </View>
           )}
         />
@@ -170,21 +166,22 @@ const MateriasScreen = ({ navigation }) => {
       <Text style={styles.sectionTitle}>Mis Preselecciones</Text>
 
       {preseleccionadas.length === 0 ? (
-        <Text>No tienes preselecciones.</Text>
+        <Text style={styles.text}>No tienes preselecciones.</Text>
       ) : (
         <FlatList
           data={preseleccionadas}
           keyExtractor={(item) => item.codigo}
           renderItem={({ item }) => (
             <View style={styles.preseleccionItem}>
-              <Text>
+              <Text style={styles.preseleccionText}>
                 {item.nombre} - {item.aula}
               </Text>
-              <Button
-                style={styles.button}
-                title="Cancelar Preselección"
+              <TouchableOpacity
+                style={styles.cancelButton}
                 onPress={() => cancelarPreseleccion(item.codigo)}
-              />
+              >
+                <Text style={styles.buttonText}>Cancelar Preselección</Text>
+              </TouchableOpacity>
             </View>
           )}
         />
@@ -192,7 +189,7 @@ const MateriasScreen = ({ navigation }) => {
 
       <Modal
         visible={modalVisible}
-        animationType="fade"
+        animationType="slide"
         transparent={true}
         onRequestClose={closeModal}
       >
@@ -201,14 +198,21 @@ const MateriasScreen = ({ navigation }) => {
             {selectedMateria && (
               <>
                 <Text style={styles.modalTitle}>Preseleccionar Materia</Text>
-                <Text>{selectedMateria.nombre}</Text>
-                <Text>{selectedMateria.horario}</Text>
-                <Text>{selectedMateria.aula}</Text>
-                <Button
-                  title="Preseleccionar"
+                <Text style={styles.modalMateriaName}>{selectedMateria.nombre}</Text>
+                <Text style={styles.modalDetails}>{selectedMateria.horario}</Text>
+                <Text style={styles.modalDetails}>{selectedMateria.aula}</Text>
+                <TouchableOpacity
+                  style={styles.button}
                   onPress={() => preseleccionarMateria(selectedMateria.codigo)}
-                />
-                <Button title="Cerrar" onPress={closeModal} />
+                >
+                  <Text style={styles.buttonText}>Preseleccionar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  style={styles.button} 
+                  onPress={closeModal}
+                >
+                  <Text style={styles.buttonText}>Cerrar</Text>
+                </TouchableOpacity>
               </>
             )}
           </View>
@@ -221,43 +225,110 @@ const MateriasScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
+    backgroundColor: "#f9fbfc",
+    padding: 15,
   },
   title: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
   },
   sectionTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: "bold",
-    marginTop: 20,
+    marginTop: 30,
+    marginBottom: 10,
+  },
+  text: {
+    fontSize: 16,
+    color: "#757575",
+    textAlign: "center",
+  },
+  materiaItem: {
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    padding: 15,
+    marginBottom: 15,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    borderWidth: 1,
+    borderColor: "#ddd",
+  },
+  materiaName: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  materiaDetails: {
+    fontSize: 14,
+    color: "#555",
+  },
+  preseleccionItem: {
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    padding: 15,
+    marginBottom: 15,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    borderWidth: 1,
+    borderColor: "#ddd",
+  },
+  preseleccionText: {
+    fontSize: 16,
+    fontWeight: "bold",
   },
   button: {
     marginTop: 10,
+    backgroundColor: "#4CAF50",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
   },
-  materiaItem: {
-    marginBottom: 10,
-    borderBottomWidth: 1,
-    paddingBottom: 10,
+  cancelButton: {
+    marginTop: 10,
+    backgroundColor: "#F44336",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
   },
-  preseleccionItem: {
-    marginBottom: 10,
-    borderBottomWidth: 1,
-    paddingBottom: 10,
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
   },
   modalContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
-    width: 250,
-    backgroundColor: "white",
-    padding: 10,
+    width: 300,
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    elevation: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
   },
   modalTitle: {
+    fontSize: 18,
     fontWeight: "bold",
+    marginBottom: 15,
+  },
+  modalMateriaName: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  modalDetails: {
+    fontSize: 14,
+    color: "#555",
+    marginBottom: 10,
   },
 });
 

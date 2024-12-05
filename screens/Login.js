@@ -72,33 +72,60 @@ const Login = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#f9fbfc",
     justifyContent: "center",
     padding: 20,
   },
   title: {
-    fontSize: 24,
-    marginBottom: 20,
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#0056b3",
     textAlign: "center",
+    marginBottom: 20,
   },
   formGroup: {
     marginBottom: 15,
   },
+  label: {
+    fontSize: 16,
+    color: "#34495e",
+    marginBottom: 5,
+  },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    borderRadius: 5,
+    borderColor: "#ddd",
+    borderRadius: 8,
+    padding: 12,
+    backgroundColor: "#fff",
+    fontSize: 16,
   },
   error: {
     color: "red",
+    fontSize: 14,
     marginTop: 10,
     textAlign: "center",
   },
-  link: {
-    color: "blue",
+  button: {
+    backgroundColor: "#0056b3",
+    padding: 15,
+    borderRadius: 8,
+    alignItems: "center",
     marginTop: 10,
+  },
+  buttonDisabled: {
+    backgroundColor: "#a0b1c2",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  link: {
+    color: "#0056b3",
+    fontSize: 14,
     textAlign: "center",
     textDecorationLine: "underline",
+    marginTop: 15,
   },
 });
 
