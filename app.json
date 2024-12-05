@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "final-app",
-    "slug": "final-app",
+    "name": "UASD App",
+    "slug": "uasd-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
