@@ -71,7 +71,7 @@ const Eventos = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Eventos de la UASD</Text>
+      <Text style={styles.title}>Proxímos eventos</Text>
 
       {loading ? (
         <ActivityIndicator size="large" color="#007bff" />
