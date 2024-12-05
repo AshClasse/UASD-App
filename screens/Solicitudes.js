@@ -34,8 +34,6 @@ const SolicitudesScreen = () => {
       if (!authToken) {
         Alert.alert("Error", "Debes iniciar sesión primero.");
         navigation.navigate("Iniciar Sesión");
-        navigation.navigate("Iniciar Sesión");
-      navigation.navigate("Iniciar Sesión");
         return;
       }
 
@@ -64,16 +62,14 @@ const SolicitudesScreen = () => {
       const authToken = await AsyncStorage.getItem("authToken");
       if (!authToken) {
         navigation.navigate("Iniciar Sesión");
-        navigation.navigate("Iniciar Sesión");
-      navigation.navigate("Iniciar Sesión");
         return;
       }
 
-      setIsLoading(true); 
+      setIsLoading(true);
 
       const response = await axios.post(
         "https://uasdapi.ia3x.com/cancelar_solicitud", 
-        id, 
+        { id }, 
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -89,13 +85,10 @@ const SolicitudesScreen = () => {
         Alert.alert("Error", "No se pudo cancelar la solicitud.");
       }
     } catch (error) {
-      console.error(
-        "Error al cancelar solicitud:",
-        error.response ? error.response.data : error.message
-      );
+      console.error("Error al cancelar solicitud:", error.response ? error.response.data : error.message);
       Alert.alert("Error", "Ocurrió un error al cancelar la solicitud.");
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
 
@@ -114,8 +107,6 @@ const SolicitudesScreen = () => {
       const authToken = await AsyncStorage.getItem("authToken");
       if (!authToken) {
         navigation.navigate("Iniciar Sesión");
-        navigation.navigate("Iniciar Sesión");
-      navigation.navigate("Iniciar Sesión");
         return;
       }
 
@@ -127,7 +118,7 @@ const SolicitudesScreen = () => {
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
-            "Content-Type": "application/json", 
+            "Content-Type": "application/json",
           },
         }
       );
@@ -210,27 +201,30 @@ const SolicitudesScreen = () => {
         </View>
       </Modal>
 
-      <Text style={styles.title}>Mis Solicitudes</Text>
-      <FlatList
-        data={solicitudes}
-        renderItem={({ item }) => (
-          <View style={styles.solicitudItem}>
-            <Text>
-              {tiposSolicitudes.find((t) => t.codigo === item.tipo)
-                ?.descripcion || "Desconocido"}
-            </Text>
-            <Text>{item.descripcion}</Text>
-            <Text>{item.fechaVencimiento}</Text>
-            <TouchableOpacity
-              onPress={() => handleCancel(item.id)}
-              style={styles.cancelButton}
-            >
-              <Text style={styles.cancelButtonText}>Cancelar</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-        keyExtractor={(item) => item.id.toString()}
-      />
+      {/* Agregamos un padding entre el botón y la lista */}
+      <View style={styles.solicitudesContainer}>
+        <Text style={styles.title}>Mis Solicitudes</Text>
+        <FlatList
+          data={solicitudes}
+          renderItem={({ item }) => (
+            <View style={styles.solicitudItem}>
+              <Text style={styles.solicitudText}>
+                {tiposSolicitudes.find((t) => t.codigo === item.tipo)
+                  ?.descripcion || "Desconocido"}
+              </Text>
+              <Text style={styles.solicitudText}>{item.descripcion}</Text>
+              <Text style={styles.solicitudText}>{item.fechaVencimiento}</Text>
+              <TouchableOpacity
+                onPress={() => handleCancel(item.id)}
+                style={styles.cancelButton}
+              >
+                <Text style={styles.cancelButtonText}>Cancelar</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          keyExtractor={(item) => item.id.toString()}
+        />
+      </View>
     </View>
   );
 };
@@ -239,40 +233,44 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: "center",
+    justifyContent: "flex-start",
+    backgroundColor: "#f5f5f5",
   },
   title: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: "bold",
-    marginBottom: 10,
+    marginBottom: 20,
+    color: "#333",
   },
   dropdown: {
-    padding: 10,
-    backgroundColor: "#f0f0f0",
+    padding: 15,
+    backgroundColor: "#007BFF",
     borderRadius: 5,
-    marginBottom: 20,
+    marginBottom: 15,
   },
   dropdownText: {
-    fontSize: 16,
-    color: "#555",
+    fontSize: 18,
+    color: "#fff",
+    textAlign: "center",
   },
   input: {
-    height: 40,
-    borderColor: "#ddd",
+    height: 45,
+    borderColor: "#ccc",
     borderWidth: 1,
     borderRadius: 5,
     marginBottom: 20,
     paddingLeft: 10,
+    backgroundColor: "#fff",
   },
   button: {
-    padding: 10,
-    backgroundColor: "#007BFF",
+    padding: 15,
+    backgroundColor: "#28a745",
     borderRadius: 5,
     alignItems: "center",
   },
   buttonText: {
     color: "#fff",
-    fontSize: 16,
+    fontSize: 18,
   },
   modalBackground: {
     flex: 1,
@@ -281,39 +279,56 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
-    width: "80%",
     backgroundColor: "#fff",
-    borderRadius: 5,
+    width: 300,
     padding: 20,
+    borderRadius: 10,
   },
   modalItem: {
-    padding: 10,
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
   },
   modalItemText: {
     fontSize: 16,
+    color: "#333",
   },
   modalCloseButton: {
-    marginTop: 20,
-    padding: 10,
-    backgroundColor: "#007BFF",
+    padding: 12,
+    backgroundColor: "#dc3545",
     borderRadius: 5,
+    marginTop: 20,
+    alignItems: "center",
   },
   modalCloseText: {
     color: "#fff",
+    fontSize: 16,
+  },
+  solicitudesContainer: {
+    marginTop: 30, // Este padding entre "Enviar solicitud" y "Mis Solicitudes"
   },
   solicitudItem: {
-    padding: 10,
-    borderBottomWidth: 1,
+    padding: 15,
+    backgroundColor: "#fff",
+    borderRadius: 5,
+    marginBottom: 10,
     borderColor: "#ddd",
+    borderWidth: 1,
+  },
+  solicitudText: {
+    fontSize: 16,
+    color: "#333",
   },
   cancelButton: {
-    marginTop: 10,
     backgroundColor: "#FF6347",
     padding: 10,
     borderRadius: 5,
+    marginTop: 10,
+    alignItems: "center",
   },
   cancelButtonText: {
     color: "#fff",
+    fontSize: 16,
   },
 });
 
