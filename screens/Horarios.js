@@ -64,21 +64,122 @@ const Horarios = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16 },
-  materiaItem: { padding: 16, borderBottomWidth: 1, borderBottomColor: "#ddd" },
-  materiaText: { fontSize: 18, fontWeight: "bold" },
-  detalleText: { fontSize: 16, color: "#555" },
-  mapContainer: { flex: 1 },
-  map: { flex: 1 },
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: "#f9fbfc",
+  },
+  materiaItem: {
+    padding: 16,
+    marginBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    transition: "all 0.3s ease",
+  },
+  materiaItemHovered: {
+    backgroundColor: "#e3f2fd",
+  },
+  materiaText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  detalleText: {
+    fontSize: 14,
+    color: "#777",
+  },
+  mapContainer: {
+    flex: 1,
+    position: "relative",
+    marginBottom: 20,
+  },
+  map: {
+    flex: 1,
+    borderRadius: 12,
+  },
   backButton: {
     position: "absolute",
     bottom: 20,
     left: 20,
     backgroundColor: "#007bff",
-    padding: 10,
-    borderRadius: 5,
+    padding: 12,
+    borderRadius: 8,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
   },
-  backButtonText: { color: "white", fontSize: 16 },
+  backButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  button: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    backgroundColor: "#4CAF50",
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 12,
+  },
+  cancelButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    backgroundColor: "#F44336",
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 12,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  materiaItemActive: {
+    backgroundColor: "#e1f5fe",
+    borderColor: "#4CAF50",
+    borderWidth: 2,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    width: 300,
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 12,
+    elevation: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 15,
+    color: "#007bff",
+  },
+  modalMateriaName: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 10,
+    color: "#333",
+  },
+  modalDetails: {
+    fontSize: 14,
+    color: "#555",
+    marginBottom: 10,
+  },
 });
+
 
 export default Horarios;

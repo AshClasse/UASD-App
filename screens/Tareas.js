@@ -24,7 +24,6 @@ const Tareas = ({ navigation }) => {
           if (!authToken) {
             Alert.alert("Error", "Debes iniciar sesión primero.");
             navigation.navigate("Iniciar Sesión");
-navigation.navigate("Iniciar Sesión");
             return;
           }
 
@@ -37,10 +36,11 @@ navigation.navigate("Iniciar Sesión");
           if (response.data) {
             setTareas(response.data);
           } else {
-            Alert.alert("Error", "No se pudieron cargar las tareas");
+            Alert.alert("Error", "No se encontraron tareas disponibles.");
           }
         } catch (error) {
-          Alert.alert("Error", "Hubo un problema al cargar las tareas");
+          console.error("Error al cargar las tareas:", error);
+          Alert.alert("Error", "Hubo un problema al cargar las tareas.");
         } finally {
           setIsLoading(false);
         }
@@ -51,19 +51,39 @@ navigation.navigate("Iniciar Sesión");
   );
 
   const renderItem = ({ item }) => (
-    <View style={styles.taskItem}>
-      <Text>{item.titulo}</Text>
-      <Text>{item.descripcion}</Text>
-      <Text>{item.fechaVencimiento}</Text>
-      <Text>{item.completada ? "Completada" : "Pendiente"}</Text>
+    <View
+      style={[
+        styles.taskItem,
+        item.completada ? styles.taskCompleted : styles.taskPending,
+      ]}
+    >
+      <Text style={styles.taskTitle}>{item.titulo}</Text>
+      <Text style={styles.taskDescription}>{item.descripcion}</Text>
+      <Text style={styles.taskDate}>
+        Fecha de vencimiento:{" "}
+        {new Date(item.fechaVencimiento).toLocaleDateString()}
+      </Text>
+      <Text style={styles.taskStatus}>
+        Estado: {item.completada ? "Completada" : "Pendiente"}
+      </Text>
     </View>
   );
 
   if (isLoading) {
     return (
       <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" />
-        <Text>Cargando tareas...</Text>
+        <ActivityIndicator size="large" color="#007BFF" />
+        <Text style={styles.loadingText}>Cargando tareas...</Text>
+      </View>
+    );
+  }
+
+  if (tareas.length === 0) {
+    return (
+      <View style={styles.loaderContainer}>
+        <Text style={styles.noTasksText}>
+          No hay tareas disponibles en este momento.
+        </Text>
       </View>
     );
   }
@@ -74,6 +94,7 @@ navigation.navigate("Iniciar Sesión");
         data={tareas}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
+        contentContainerStyle={styles.list}
       />
     </View>
   );
@@ -90,11 +111,54 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: "gray",
+  },
+  noTasksText: {
+    fontSize: 16,
+    color: "gray",
+  },
+  list: {
+    paddingBottom: 20,
+  },
   taskItem: {
-    marginBottom: 10,
-    padding: 5,
-    borderBottomWidth: 1,
-    borderColor: "gray",
+    marginBottom: 15,
+    padding: 15,
+    borderRadius: 8,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    backgroundColor: "#f9f9f9",
+  },
+  taskCompleted: {
+    borderLeftWidth: 5,
+    borderLeftColor: "green",
+  },
+  taskPending: {
+    borderLeftWidth: 5,
+    borderLeftColor: "red",
+  },
+  taskTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  taskDescription: {
+    fontSize: 14,
+    color: "#666",
+    marginVertical: 5,
+  },
+  taskDate: {
+    fontSize: 14,
+    color: "#555",
+  },
+  taskStatus: {
+    fontSize: 14,
+    fontWeight: "bold",
+    marginTop: 5,
   },
 });
 
