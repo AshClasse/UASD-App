@@ -21,7 +21,7 @@ const Navigation = () => {
   return (
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="LandingScreen">
-        <Drawer.Screen name="LandingScreen" component={LandingScreen} />
+        <Drawer.Screen name="Inicio" component={LandingScreen} />
         <Drawer.Screen name="Iniciar Sesión" component={Login} />
         <Drawer.Screen name="Noticias" component={Noticias} />
         <Drawer.Screen name="Eventos" component={Eventos} />
