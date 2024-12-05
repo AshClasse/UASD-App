@@ -10,12 +10,20 @@ import {
 } from "react-native";
 
 const LandingScreen = ({ navigation }) => {
+  const colors = {
+    primary: "#007BFF",
+    white: "#fff",
+    light: "#ddd",
+    darkOverlay: "rgba(0, 0, 0, 0.5)",
+  };
+
   return (
     <ImageBackground
       source={{
         uri: "https://images.pexels.com/photos/12064/pexels-photo-12064.jpeg?cs=srgb&dl=pexels-repuding-12064.jpg&fm=jpg",
       }}
       style={styles.background}
+      resizeMode="cover"
     >
       <View style={styles.overlay} />
       <ScrollView contentContainerStyle={styles.container}>
@@ -30,27 +38,47 @@ const LandingScreen = ({ navigation }) => {
 
         <Text style={styles.sectionTitle}>Misión</Text>
         <Text style={styles.text}>
-          Formar profesionales éticos y competentes, comprometidos con el
-          desarrollo de la sociedad, mediante una oferta académica de calidad y
-          programas de investigación.
+          Su Misión es formar críticamente profesionales, investigadores y
+          técnicos en las ciencias, las humanidades y las artes necesarias y
+          eficientes para coadyuvar a las transformaciones que demanda el
+          desarrollo nacional sostenible. Además, busca difundir los ideales de
+          la cultura de paz, progreso, justicia social, equidad de género y
+          respeto a los derechos humanos, contribuyendo a la formación de una
+          conciencia colectiva basada en valores.
         </Text>
 
         <Text style={styles.sectionTitle}>Visión</Text>
         <Text style={styles.text}>
-          Ser la universidad líder en educación superior, investigación y
-          extensión, reconocida nacional e internacionalmente por su excelencia
-          y contribución al progreso.
+          La Universidad tiene como Visión ser una institución de excelencia y
+          liderazgo académico, gestionada con eficiencia y acreditada nacional e
+          internacionalmente. Se esfuerza por contar con un personal docente,
+          investigador, extensionista y egresados ​​de alta calificación,
+          creadora de conocimientos científicos y nuevas tecnologías, reconocida
+          por su contribución al desarrollo humano con equidad y hacia una
+          sociedad democrática y solidaria.
         </Text>
 
         <Text style={styles.sectionTitle}>Valores</Text>
         <Text style={styles.text}>
-          - Integridad - Excelencia - Responsabilidad Social - Innovación -
-          Compromiso
+          La Universidad está orientada hacia el respeto y la defensa de la
+          dignidad humana y se sustenta en los siguientes valores:
+        </Text>
+        <Text style={styles.valuesList}>
+          a) Solidaridad{"\n"}
+          b) Transparencia{"\n"}
+          c) Verdad{"\n"}
+          d) Igualdad{"\n"}
+          e) Libertad{"\n"}
+          f) Equidad{"\n"}
+          g) Tolerancia{"\n"}
+          h) Responsabilidad{"\n"}
+          i) Convivencia{"\n"}
+          j) Paz
         </Text>
 
         <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Iniciar Sesión")}
+          style={[styles.button, { backgroundColor: colors.primary }]}
+          onPress={() => navigation?.navigate("Iniciar Sesión")}
         >
           <Text style={styles.buttonText}>Iniciar Sesión</Text>
         </TouchableOpacity>
@@ -62,7 +90,6 @@ const LandingScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    resizeMode: "cover",
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
@@ -75,10 +102,10 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   logo: {
-    width: 300,
-    height: 300,
+    width: 200,
+    height: 200,
     marginBottom: 20,
-    resizeMode: "cover",
+    resizeMode: "contain",
   },
   title: {
     fontSize: 24,
@@ -99,17 +126,24 @@ const styles = StyleSheet.create({
     color: "#fff",
     marginTop: 20,
     marginBottom: 10,
+    textAlign: "center",
   },
   text: {
     fontSize: 16,
     color: "#ddd",
-    textAlign: "center",
+    textAlign: "justify",
     marginBottom: 10,
     lineHeight: 24,
   },
+  valuesList: {
+    fontSize: 16,
+    color: "#ddd",
+    textAlign: "left",
+    lineHeight: 24,
+    marginBottom: 10,
+  },
   button: {
     marginTop: 20,
-    backgroundColor: "#007BFF",
     padding: 10,
     borderRadius: 5,
   },

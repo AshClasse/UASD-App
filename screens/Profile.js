@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Button,
   Alert,
   ActivityIndicator,
   TouchableOpacity,
@@ -21,35 +20,40 @@ const Profile = ({ navigation }) => {
   const fetchUserData = async () => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
-      if (authToken) {
-        const response = await axios.get(
-          "https://uasdapi.ia3x.com/info_usuario",
-          {
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          }
-        );
+      if (!authToken) {
+        Alert.alert("Sesión expirada", "Por favor, inicia sesión nuevamente.");
+        navigation.replace("Iniciar Sesión");
+        return;
+      }
 
-        if (response.data.success) {
-          setUsername(response.data.data.username);
-          setFullName(
-            `${response.data.data.nombre} ${response.data.data.apellido}`
-          );
-          setEmail(response.data.data.email);
-        } else {
-          Alert.alert(
-            "Error",
-            response.data.message || "Failed to load user data"
-          );
+      const response = await axios.get(
+        "https://uasdapi.ia3x.com/info_usuario",
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
         }
+      );
+
+      if (response.data.success) {
+        const { username, nombre, apellido, email } = response.data.data;
+        setUsername(username || "No disponible");
+        setFullName(
+          `${nombre || ""} ${apellido || ""}`.trim() || "No disponible"
+        );
+        setEmail(email || "No disponible");
       } else {
-        Alert.alert("Error", "Debes iniciar sesión primero.");
-        navigation.navigate("Iniciar Sesión");
-        navigation.navigate("Iniciar Sesión");
+        Alert.alert(
+          "Error",
+          response.data.message ||
+            "No se pudo cargar la información del usuario."
+        );
       }
     } catch (error) {
-      Alert.alert("Error", "Failed to load user data");
+      Alert.alert(
+        "Error",
+        "Hubo un problema al cargar la información del usuario."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -58,9 +62,10 @@ const Profile = ({ navigation }) => {
   const handleLogout = async () => {
     try {
       await AsyncStorage.clear();
-      navigation.navigate("Iniciar Sesión");
+      Alert.alert("Cierre de sesión", "Tu sesión ha sido cerrada.");
+      navigation.replace("Iniciar Sesión");
     } catch (error) {
-      Alert.alert("Error", "Failed to log out");
+      Alert.alert("Error", "No se pudo cerrar sesión.");
     }
   };
 
@@ -75,6 +80,7 @@ const Profile = ({ navigation }) => {
     return (
       <View style={styles.container}>
         <ActivityIndicator size="large" color="#007bff" />
+        <Text style={styles.loadingText}>Cargando...</Text>
       </View>
     );
   }
@@ -159,6 +165,11 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: "#6c757d",
   },
 });
 
